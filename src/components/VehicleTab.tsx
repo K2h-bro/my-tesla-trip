@@ -52,9 +52,8 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
     <div className="space-y-5 pb-4">
       <h1 className="text-xl font-bold text-foreground">내 차량</h1>
 
-      {/* Vehicle Card */}
       <motion.div
-        className="bg-card rounded-2xl p-6 shadow-sm text-center"
+        className="card-premium rounded-2xl p-6 text-center card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -62,7 +61,7 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
         <div className="w-20 h-20 rounded-2xl bg-primary/10 mx-auto flex items-center justify-center text-3xl">
           🚗
         </div>
-        <h2 className="text-lg font-bold text-foreground mt-3">Tesla {vehicleModel}</h2>
+        <h2 className="text-lg font-extrabold text-foreground mt-3">Tesla {vehicleModel}</h2>
         <div className="flex items-center justify-center gap-2 mt-2">
           <div className={`w-2 h-2 rounded-full ${data.isCharging ? "bg-efficiency-good animate-pulse" : "bg-muted-foreground/30"}`} />
           <span className="text-sm text-muted-foreground">{data.isCharging ? "충전 중" : "대기 중"}</span>
@@ -75,21 +74,20 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
         )}
       </motion.div>
 
-      {/* Vehicle Stats */}
       <div className="grid grid-cols-2 gap-3">
         {vehicleInfo.map((info, i) => {
           const Icon = info.icon;
           return (
             <motion.div
               key={info.label}
-              className="bg-card rounded-2xl p-4 shadow-sm"
+              className="card-premium rounded-2xl p-4 card-glow"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
             >
               <Icon size={18} className="text-primary mb-2" />
               <p className="text-xs text-muted-foreground">{info.label}</p>
-              <p className="text-lg font-bold text-foreground">{info.value}</p>
+              <p className="text-xl font-extrabold text-foreground">{info.value}</p>
               <p className="text-[10px] text-muted-foreground">{info.sub}</p>
             </motion.div>
           );

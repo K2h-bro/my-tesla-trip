@@ -1,24 +1,9 @@
 import { motion } from "framer-motion";
-import { Route, Zap, CreditCard, RotateCcw, Lightbulb, ThermometerSun } from "lucide-react";
+import { Route, Zap, CreditCard, RotateCcw } from "lucide-react";
 import CircularGauge from "./CircularGauge";
 import { useWeeklyReport } from "@/hooks/useWeeklyReport";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { AppSettings } from "@/hooks/useSettings";
-
-const tips = [
-  {
-    icon: ThermometerSun,
-    title: "프리컨디셔닝 활용하기",
-    description: "출발 10분 전 에어컨을 켜면 배터리 효율이 12% 향상됩니다.",
-    savings: "₩3,200/주",
-  },
-  {
-    icon: Lightbulb,
-    title: "회생제동 최대로 설정",
-    description: "회생제동 강도를 '표준'으로 설정하면 에너지 회수율이 높아집니다.",
-    savings: "₩2,800/주",
-  },
-];
 
 interface ReportTabProps {
   settings: AppSettings;
@@ -76,7 +61,7 @@ const ReportTab = ({ settings }: Partial<ReportTabProps> & {} = {}) => {
       </div>
 
       <motion.div
-        className="bg-card rounded-2xl p-6 flex justify-center shadow-sm"
+        className="card-premium rounded-2xl p-6 flex justify-center card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -90,21 +75,21 @@ const ReportTab = ({ settings }: Partial<ReportTabProps> & {} = {}) => {
           return (
             <motion.div
               key={stat.label}
-              className="bg-card rounded-2xl p-4 shadow-sm"
+              className="card-premium rounded-2xl p-4 card-glow"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
             >
               <Icon size={18} className="text-primary mb-2" />
               <p className="text-xs text-muted-foreground">{stat.label}</p>
-              <p className="text-lg font-bold text-foreground mt-0.5">{stat.value}</p>
+              <p className="text-xl font-extrabold text-foreground mt-0.5">{stat.value}</p>
             </motion.div>
           );
         })}
       </div>
 
       <motion.div
-        className="bg-card rounded-2xl p-5 shadow-sm"
+        className="card-premium rounded-2xl p-5 card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, delay: 0.3 }}
@@ -134,7 +119,7 @@ const ReportTab = ({ settings }: Partial<ReportTabProps> & {} = {}) => {
                     transition={{ duration: 0.6, delay: 0.4 }}
                   />
                 </div>
-                <span className="text-xs font-semibold text-foreground w-8 text-right">
+                <span className="text-xs font-bold text-foreground w-8 text-right">
                   {item.value > 0 ? item.value : "—"}
                 </span>
               </div>
@@ -142,37 +127,6 @@ const ReportTab = ({ settings }: Partial<ReportTabProps> & {} = {}) => {
           })}
         </div>
       </motion.div>
-
-      <div>
-        <h2 className="text-sm font-semibold text-foreground mb-3">🤖 AI 절약 팁</h2>
-        <div className="space-y-3">
-          {tips.map((tip, i) => {
-            const Icon = tip.icon;
-            return (
-              <motion.div
-                key={i}
-                className="bg-card rounded-2xl p-4 shadow-sm flex gap-3"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.5 + i * 0.1 }}
-              >
-                <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
-                  <Icon size={20} className="text-primary" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-start justify-between gap-2">
-                    <h3 className="text-sm font-semibold text-foreground">{tip.title}</h3>
-                    <span className="text-xs font-semibold bg-savings-bg text-savings-fg px-2 py-0.5 rounded-full whitespace-nowrap">
-                      {tip.savings}
-                    </span>
-                  </div>
-                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{tip.description}</p>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-      </div>
     </div>
   );
 };

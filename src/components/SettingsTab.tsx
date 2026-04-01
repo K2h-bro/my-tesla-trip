@@ -36,9 +36,8 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
     <div className="space-y-5 pb-4">
       <h1 className="text-xl font-bold text-foreground">설정</h1>
 
-      {/* Profile Card */}
       <motion.div
-        className="bg-card rounded-2xl p-5 shadow-sm"
+        className="card-premium rounded-2xl p-5 card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
@@ -51,7 +50,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
               placeholder="이름을 입력하세요"
-              className="h-10"
+              className="h-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
             />
           </div>
           <div>
@@ -61,10 +60,10 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
                 <button
                   key={model}
                   onClick={() => onUpdateSettings?.({ vehicleModel: model })}
-                  className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
+                  className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
                     s.vehicleModel === model
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground hover:bg-secondary/80"
+                      : "bg-secondary text-muted-foreground hover:bg-secondary/80 border border-border"
                   }`}
                 >
                   {model}
@@ -74,16 +73,15 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
           </div>
           <button
             onClick={handleSaveProfile}
-            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-semibold transition-colors hover:bg-primary/90"
+            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold transition-all hover:bg-primary/90"
           >
             {saved ? "✓ 저장됨" : "저장"}
           </button>
         </div>
       </motion.div>
 
-      {/* Notification Settings */}
       <motion.div
-        className="bg-card rounded-2xl p-5 shadow-sm"
+        className="card-premium rounded-2xl p-5 card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.05 }}
@@ -104,7 +102,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
             <div className="flex items-center gap-2 mb-3">
               <Battery size={18} className="text-primary" />
               <span className="text-sm font-medium text-foreground">배터리 낮음 알림</span>
-              <span className="ml-auto text-sm font-bold text-primary">{s.batteryLowThreshold}%</span>
+              <span className="ml-auto text-sm font-extrabold text-primary">{s.batteryLowThreshold}%</span>
             </div>
             <Slider
               value={[s.batteryLowThreshold]}
@@ -121,9 +119,8 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
         </div>
       </motion.div>
 
-      {/* Calculation Settings */}
       <motion.div
-        className="bg-card rounded-2xl p-5 shadow-sm"
+        className="card-premium rounded-2xl p-5 card-glow"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
@@ -134,7 +131,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
             <div className="flex items-center gap-2 mb-3">
               <Car size={18} className="text-primary" />
               <span className="text-sm font-medium text-foreground">배터리 용량</span>
-              <span className="ml-auto text-sm font-bold text-primary">{s.batteryCapacity} kWh</span>
+              <span className="ml-auto text-sm font-extrabold text-primary">{s.batteryCapacity} kWh</span>
             </div>
             <Slider
               value={[s.batteryCapacity]}
@@ -152,7 +149,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
             <div className="flex items-center gap-2 mb-3">
               <Coins size={18} className="text-primary" />
               <span className="text-sm font-medium text-foreground">전기 요금</span>
-              <span className="ml-auto text-sm font-bold text-primary">₩{s.electricityRate}/kWh</span>
+              <span className="ml-auto text-sm font-extrabold text-primary">₩{s.electricityRate}/kWh</span>
             </div>
             <Slider
               value={[s.electricityRate]}
@@ -169,14 +166,13 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
         </div>
       </motion.div>
 
-      {/* Other */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.15 }}
       >
         <h2 className="text-xs font-semibold text-muted-foreground mb-2 px-1">기타</h2>
-        <div className="bg-card rounded-2xl shadow-sm overflow-hidden divide-y divide-border">
+        <div className="card-premium rounded-2xl card-glow overflow-hidden divide-y divide-border">
           {[
             { icon: HelpCircle, label: "고객센터" },
             { icon: Info, label: "앱 정보" },
@@ -187,7 +183,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
                 key={item.label}
                 className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-secondary/50 transition-colors"
               >
-                <Icon size={18} className="text-muted-foreground" />
+                <Icon size={18} className="text-primary" />
                 <span className="text-sm font-medium text-foreground flex-1 text-left">{item.label}</span>
                 <ChevronRight size={16} className="text-muted-foreground/50" />
               </button>
