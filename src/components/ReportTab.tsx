@@ -3,6 +3,7 @@ import { Route, Zap, CreditCard, RotateCcw, Lightbulb, ThermometerSun } from "lu
 import CircularGauge from "./CircularGauge";
 import { useWeeklyReport } from "@/hooks/useWeeklyReport";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { AppSettings } from "@/hooks/useSettings";
 
 const tips = [
   {
@@ -19,8 +20,12 @@ const tips = [
   },
 ];
 
-const ReportTab = () => {
-  const { data, isLoading, isError } = useWeeklyReport();
+interface ReportTabProps {
+  settings: AppSettings;
+}
+
+const ReportTab = ({ settings }: ReportTabProps) => {
+  const { data, isLoading, isError } = useWeeklyReport(settings.batteryCapacity, settings.electricityRate);
 
   if (isLoading) {
     return (
@@ -59,7 +64,6 @@ const ReportTab = () => {
 
   return (
     <div className="space-y-5 pb-4">
-      {/* Header */}
       <div>
         <h1 className="text-xl font-bold text-foreground">주간 리포트</h1>
         <p className="text-sm text-muted-foreground">
@@ -69,7 +73,6 @@ const ReportTab = () => {
         </p>
       </div>
 
-      {/* Circular Gauge */}
       <motion.div
         className="bg-card rounded-2xl p-6 flex justify-center shadow-sm"
         initial={{ opacity: 0, y: 10 }}
@@ -79,7 +82,6 @@ const ReportTab = () => {
         <CircularGauge score={data.score} />
       </motion.div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         {statsData.map((stat, i) => {
           const Icon = stat.icon;
@@ -99,7 +101,6 @@ const ReportTab = () => {
         })}
       </div>
 
-      {/* Weekly Bar Chart */}
       <motion.div
         className="bg-card rounded-2xl p-5 shadow-sm"
         initial={{ opacity: 0, y: 10 }}
@@ -140,7 +141,6 @@ const ReportTab = () => {
         </div>
       </motion.div>
 
-      {/* AI Tips */}
       <div>
         <h2 className="text-sm font-semibold text-foreground mb-3">🤖 AI 절약 팁</h2>
         <div className="space-y-3">

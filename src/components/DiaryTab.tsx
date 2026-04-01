@@ -1,48 +1,48 @@
 import { motion } from "framer-motion";
-import { Calendar, CloudRain, Sunrise, MapPin, Sun, Cloud } from "lucide-react";
+import { Calendar, Thermometer, MapPin, Route } from "lucide-react";
+import { useDiaryData } from "@/hooks/useDiaryData";
+import { Skeleton } from "@/components/ui/skeleton";
+import type { AppSettings } from "@/hooks/useSettings";
 
-const totalKm = 28420;
 const earthCircumference = 40075;
-const earthLaps = (totalKm / earthCircumference).toFixed(2);
 
-const milestones = [
-  { icon: Calendar, title: "함께한 날", value: "847일", color: "bg-primary/10 text-primary" },
-  { icon: CloudRain, title: "비 오는 날", value: "62회", color: "bg-blue-50 text-blue-500" },
-  { icon: Sunrise, title: "새벽 드라이브", value: "23회", color: "bg-amber-50 text-amber-500" },
-  { icon: MapPin, title: "원정 여행", value: "15회", color: "bg-rose-50 text-rose-500" },
-];
+interface DiaryTabProps {
+  settings: AppSettings;
+}
 
-const journeys = [
-  {
-    title: "서울 → 강릉 해변 드라이브",
-    date: "2026.03.28",
-    distance: "237 km",
-    efficiency: "6.8 km/kWh",
-    weather: Sun,
-    tags: ["고속도로", "주말"],
-    mapBg: "from-blue-100 to-cyan-50",
-  },
-  {
-    title: "판교 출퇴근",
-    date: "2026.03.27",
-    distance: "42 km",
-    efficiency: "7.1 km/kWh",
-    weather: Cloud,
-    tags: ["출퇴근", "평일"],
-    mapBg: "from-gray-100 to-slate-50",
-  },
-  {
-    title: "제주 올레길 투어",
-    date: "2026.03.22",
-    distance: "186 km",
-    efficiency: "5.9 km/kWh",
-    weather: CloudRain,
-    tags: ["제주", "여행"],
-    mapBg: "from-emerald-100 to-teal-50",
-  },
-];
+const DiaryTab = ({ settings }: DiaryTabProps) => {
+  const { data, isLoading, isError } = useDiaryData(settings.batteryCapacity);
 
-const DiaryTab = () => {
+  if (isLoading) {
+    return (
+      <div className="space-y-5 pb-4">
+        <Skeleton className="h-6 w-48" />
+        <Skeleton className="h-48 rounded-2xl" />
+        <Skeleton className="h-32 rounded-2xl" />
+        <Skeleton className="h-40 rounded-2xl" />
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <div className="space-y-5 pb-4">
+        <h1 className="text-xl font-bold text-foreground">드라이브 다이어리</h1>
+        <div className="flex items-center justify-center h-64">
+          <p className="text-muted-foreground text-sm">데이터를 불러올 수 없습니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const { stats, journeys } = data;
+  const earthLaps = (stats.totalKm / earthCircumference).toFixed(2);
+
+  const milestones = [
+    { icon: Calendar, title: "함께한 날", value: `${stats.totalDays}일`, color: "bg-primary/10 text-primary" },
+    { icon: Route, title: "총 주행", value: `${stats.totalKm.toLocaleString()} km`, color: "bg-blue-50 text-blue-500" },
+  ];
+
   return (
     <div className="space-y-5 pb-4">
       <h1 className="text-xl font-bold text-foreground">드라이브 다이어리</h1>
@@ -55,7 +55,7 @@ const DiaryTab = () => {
         transition={{ duration: 0.4 }}
       >
         <div className="w-32 h-32 rounded-full border-4 border-primary/20 flex flex-col items-center justify-center bg-primary/5">
-          <span className="text-2xl font-bold text-foreground">{totalKm.toLocaleString()}</span>
+          <span className="text-2xl font-bold text-foreground">{stats.totalKm.toLocaleString()}</span>
           <span className="text-xs text-muted-foreground">km</span>
         </div>
         <p className="text-sm text-muted-foreground mt-3">
@@ -105,43 +105,45 @@ const DiaryTab = () => {
       {/* Journey Cards */}
       <div>
         <h2 className="text-sm font-semibold text-foreground mb-3">최근 여정</h2>
-        <div className="space-y-3">
-          {journeys.map((j, i) => {
-            const WeatherIcon = j.weather;
-            return (
+        {journeys.length === 0 ? (
+          <p className="text-sm text-muted-foreground text-center py-8">기록된 여정이 없습니다.</p>
+        ) : (
+          <div className="space-y-3">
+            {journeys.map((j, i) => (
               <motion.div
-                key={i}
+                key={j.date}
                 className="bg-card rounded-2xl shadow-sm overflow-hidden"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.3 + i * 0.08 }}
+                transition={{ duration: 0.3, delay: 0.3 + i * 0.05 }}
               >
-                {/* Map thumbnail */}
-                <div className={`h-24 bg-gradient-to-br ${j.mapBg} flex items-center justify-center`}>
-                  <MapPin size={28} className="text-muted-foreground/30" />
+                <div className="h-16 bg-gradient-to-br from-primary/10 to-primary/5 flex items-center justify-center">
+                  <MapPin size={24} className="text-muted-foreground/30" />
                 </div>
                 <div className="p-4">
-                  <h3 className="text-sm font-semibold text-foreground">{j.title}</h3>
-                  <p className="text-xs text-muted-foreground mt-1">{j.date}</p>
+                  <h3 className="text-sm font-semibold text-foreground">{j.date} 드라이브</h3>
                   <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
-                    <span>{j.distance}</span>
-                    <span>•</span>
-                    <span>{j.efficiency}</span>
-                    <span>•</span>
-                    <WeatherIcon size={14} />
+                    <span>{j.distanceKm} km</span>
+                    {j.avgEfficiency != null && (
+                      <>
+                        <span>•</span>
+                        <span>{j.avgEfficiency} km/kWh</span>
+                      </>
+                    )}
+                    {j.avgTemp != null && (
+                      <>
+                        <span>•</span>
+                        <Thermometer size={12} className="inline" />
+                        <span>{j.avgTemp}°C</span>
+                      </>
+                    )}
                   </div>
-                  <div className="flex gap-1.5 mt-2.5">
-                    {j.tags.map((tag) => (
-                      <span key={tag} className="text-[10px] font-medium bg-tag-bg text-tag-fg px-2 py-0.5 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
+                  <p className="text-[10px] text-muted-foreground/60 mt-1">{j.recordCount}개 기록</p>
                 </div>
               </motion.div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
