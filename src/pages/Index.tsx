@@ -26,7 +26,7 @@ const Index = () => {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-md z-40">
         <div className="max-w-lg mx-auto flex items-center justify-center h-14 px-4">
-          <h1 className="text-lg font-bold text-foreground tracking-tight">DriveLog</h1>
+          <img src="https://smith.speedgabia.com/logo_data/the_smith_logo.png" alt="DriveLog" className="h-8 object-contain" />
         </div>
       </header>
 
