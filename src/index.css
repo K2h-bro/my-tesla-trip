@@ -6,62 +6,60 @@
 
 @layer base {
   :root {
-    --background: 228 50% 7%;
-    --foreground: 0 0% 95%;
+    --background: 36 33% 93%;
+    --foreground: 33 30% 12%;
 
-    --card: 225 30% 12%;
-    --card-foreground: 0 0% 95%;
+    --card: 37 25% 88%;
+    --card-foreground: 33 30% 12%;
 
-    --popover: 225 30% 12%;
-    --popover-foreground: 0 0% 95%;
+    --popover: 37 25% 88%;
+    --popover-foreground: 33 30% 12%;
 
-    --primary: 200 100% 45%;
+    --primary: 150 45% 32%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 225 20% 18%;
-    --secondary-foreground: 220 10% 70%;
+    --secondary: 36 20% 83%;
+    --secondary-foreground: 33 30% 12%;
 
-    --muted: 225 20% 18%;
-    --muted-foreground: 220 10% 55%;
+    --muted: 36 20% 83%;
+    --muted-foreground: 33 15% 45%;
 
-    --accent: 200 100% 45%;
+    --accent: 150 45% 32%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 354 80% 49%;
+    --destructive: 4 63% 46%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 225 20% 18%;
-    --input: 225 20% 20%;
-    --ring: 200 100% 45%;
+    --border: 36 18% 80%;
+    --input: 36 18% 80%;
+    --ring: 150 45% 32%;
 
-    --radius: 1rem;
+    --radius: 1.25rem;
 
-    /* DriveLog premium tokens */
-    --efficiency-good: 160 60% 45%;
-    --efficiency-bad: 354 80% 49%;
-    --efficiency-medium: 38 90% 50%;
-    --gauge-track: 225 20% 18%;
-    --gauge-fill: 200 100% 45%;
-    --surface-raised: 225 30% 14%;
-    --tab-active: 200 100% 45%;
-    --tab-inactive: 220 10% 40%;
-    --banner-bg: 225 30% 15%;
-    --banner-fg: 0 0% 95%;
-    --tag-bg: 225 20% 18%;
-    --tag-fg: 220 10% 70%;
-    --savings-bg: 160 40% 15%;
-    --savings-fg: 160 60% 55%;
-    --card-glow: 200 100% 45%;
-    --card-border: 225 20% 20%;
+    /* DriveLog warm tokens */
+    --efficiency-good: 150 45% 32%;
+    --efficiency-bad: 4 63% 46%;
+    --efficiency-medium: 28 80% 52%;
+    --gauge-track: 36 20% 85%;
+    --gauge-fill: 150 45% 32%;
+    --surface-raised: 37 25% 90%;
+    --tab-active: 33 30% 12%;
+    --tab-inactive: 33 10% 60%;
+    --banner-bg: 37 25% 85%;
+    --banner-fg: 33 30% 12%;
+    --tag-bg: 36 20% 85%;
+    --tag-fg: 33 15% 40%;
+    --savings-bg: 150 30% 90%;
+    --savings-fg: 150 45% 28%;
 
-    --sidebar-background: 228 50% 7%;
-    --sidebar-foreground: 0 0% 95%;
-    --sidebar-primary: 200 100% 45%;
+    --sidebar-background: 36 33% 93%;
+    --sidebar-foreground: 33 30% 12%;
+    --sidebar-primary: 150 45% 32%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 225 20% 18%;
-    --sidebar-accent-foreground: 0 0% 95%;
-    --sidebar-border: 225 20% 18%;
-    --sidebar-ring: 200 100% 45%;
+    --sidebar-accent: 36 20% 83%;
+    --sidebar-accent-foreground: 33 30% 12%;
+    --sidebar-border: 36 18% 80%;
+    --sidebar-ring: 150 45% 32%;
   }
 }
 
@@ -83,12 +81,5 @@
   }
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
-  }
-  .card-glow {
-    box-shadow: 0 0 20px -5px hsl(var(--card-glow) / 0.1), 0 4px 20px -2px hsl(0 0% 0% / 0.3);
-  }
-  .card-premium {
-    border: 1px solid hsl(var(--card-border));
-    background: linear-gradient(135deg, hsl(var(--card)) 0%, hsl(225 30% 10%) 100%);
   }
 }

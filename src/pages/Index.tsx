@@ -23,7 +23,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="max-w-lg mx-auto px-4 pt-12 pb-24">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 bg-background/80 backdrop-blur-md z-40">
+        <div className="max-w-lg mx-auto flex items-center justify-center h-14 px-4">
+          <h1 className="text-lg font-bold text-foreground tracking-tight">DriveLog</h1>
+        </div>
+      </header>
+
+      <div className="max-w-lg mx-auto px-5 pt-20 pb-28">
         {renderTab()}
       </div>
       <BottomTabBar activeTab={activeTab} onTabChange={setActiveTab} />

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { User, Bell, ChevronRight, HelpCircle, Info, Battery, Coins, Car } from "lucide-react";
+import { Bell, ChevronRight, HelpCircle, Info, Battery, Coins, Car } from "lucide-react";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -33,37 +33,36 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
   };
 
   return (
-    <div className="space-y-5 pb-4">
-      <h1 className="text-xl font-bold text-foreground">설정</h1>
-
+    <div className="space-y-6 pb-4">
+      {/* Profile */}
       <motion.div
-        className="card-premium rounded-2xl p-5 card-glow"
+        className="bg-card rounded-2xl p-5"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h2 className="text-xs font-semibold text-muted-foreground mb-3">프로필 설정</h2>
+        <h2 className="text-xs font-bold text-muted-foreground mb-3">프로필 설정</h2>
         <div className="space-y-3">
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">사용자 이름</label>
+            <label className="text-[10px] text-muted-foreground mb-1 block">사용자 이름</label>
             <Input
               value={nameInput}
               onChange={(e) => setNameInput(e.target.value)}
               placeholder="이름을 입력하세요"
-              className="h-10 bg-secondary border-border text-foreground placeholder:text-muted-foreground"
+              className="h-10 bg-background border-border"
             />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground mb-1 block">차량 모델</label>
+            <label className="text-[10px] text-muted-foreground mb-1 block">차량 모델</label>
             <div className="grid grid-cols-2 gap-2">
               {VEHICLE_MODELS.map((model) => (
                 <button
                   key={model}
                   onClick={() => onUpdateSettings?.({ vehicleModel: model })}
-                  className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                  className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-colors ${
                     s.vehicleModel === model
                       ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-muted-foreground hover:bg-secondary/80 border border-border"
+                      : "bg-background text-muted-foreground"
                   }`}
                 >
                   {model}
@@ -73,24 +72,25 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
           </div>
           <button
             onClick={handleSaveProfile}
-            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold transition-all hover:bg-primary/90"
+            className="w-full py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-bold"
           >
             {saved ? "✓ 저장됨" : "저장"}
           </button>
         </div>
       </motion.div>
 
+      {/* Notifications */}
       <motion.div
-        className="card-premium rounded-2xl p-5 card-glow"
+        className="bg-card rounded-2xl p-5"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.05 }}
       >
-        <h2 className="text-xs font-semibold text-muted-foreground mb-3">알림 설정</h2>
+        <h2 className="text-xs font-bold text-muted-foreground mb-3">알림 설정</h2>
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Bell size={18} className="text-primary" />
+              <Bell size={16} className="text-primary" />
               <span className="text-sm font-medium text-foreground">주간 리포트 알림</span>
             </div>
             <Switch
@@ -100,7 +100,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
           </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Battery size={18} className="text-primary" />
+              <Battery size={16} className="text-primary" />
               <span className="text-sm font-medium text-foreground">배터리 낮음 알림</span>
               <span className="ml-auto text-sm font-extrabold text-primary">{s.batteryLowThreshold}%</span>
             </div>
@@ -119,17 +119,18 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
         </div>
       </motion.div>
 
+      {/* Calculation */}
       <motion.div
-        className="card-premium rounded-2xl p-5 card-glow"
+        className="bg-card rounded-2xl p-5"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.1 }}
       >
-        <h2 className="text-xs font-semibold text-muted-foreground mb-3">계산 설정</h2>
+        <h2 className="text-xs font-bold text-muted-foreground mb-3">계산 설정</h2>
         <div className="space-y-5">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Car size={18} className="text-primary" />
+              <Car size={16} className="text-primary" />
               <span className="text-sm font-medium text-foreground">배터리 용량</span>
               <span className="ml-auto text-sm font-extrabold text-primary">{s.batteryCapacity} kWh</span>
             </div>
@@ -147,7 +148,7 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
           </div>
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Coins size={18} className="text-primary" />
+              <Coins size={16} className="text-primary" />
               <span className="text-sm font-medium text-foreground">전기 요금</span>
               <span className="ml-auto text-sm font-extrabold text-primary">₩{s.electricityRate}/kWh</span>
             </div>
@@ -166,13 +167,13 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
         </div>
       </motion.div>
 
+      {/* Other */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3, delay: 0.15 }}
       >
-        <h2 className="text-xs font-semibold text-muted-foreground mb-2 px-1">기타</h2>
-        <div className="card-premium rounded-2xl card-glow overflow-hidden divide-y divide-border">
+        <div className="bg-card rounded-2xl overflow-hidden divide-y divide-border">
           {[
             { icon: HelpCircle, label: "고객센터" },
             { icon: Info, label: "앱 정보" },
@@ -183,16 +184,16 @@ const SettingsTab = ({ settings, onUpdateSettings = () => {} }: Partial<Settings
                 key={item.label}
                 className="w-full flex items-center gap-3 px-4 py-3.5 hover:bg-secondary/50 transition-colors"
               >
-                <Icon size={18} className="text-primary" />
+                <Icon size={16} className="text-muted-foreground" />
                 <span className="text-sm font-medium text-foreground flex-1 text-left">{item.label}</span>
-                <ChevronRight size={16} className="text-muted-foreground/50" />
+                <ChevronRight size={14} className="text-muted-foreground/50" />
               </button>
             );
           })}
         </div>
       </motion.div>
 
-      <p className="text-center text-[10px] text-muted-foreground pt-2">DriveLog v1.0.0</p>
+      <p className="text-center text-[10px] text-muted-foreground pt-1">DriveLog v1.0.0</p>
     </div>
   );
 };
