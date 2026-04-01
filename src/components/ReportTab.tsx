@@ -24,7 +24,7 @@ interface ReportTabProps {
   settings: AppSettings;
 }
 
-const ReportTab = ({ settings = { batteryCapacity: 63, electricityRate: 320 } }: Partial<ReportTabProps> & {}) => {
+const ReportTab = ({ settings }: Partial<ReportTabProps> & {} = {}) => {
   const batteryCapacity = settings?.batteryCapacity ?? 63;
   const electricityRate = settings?.electricityRate ?? 320;
   const { data, isLoading, isError } = useWeeklyReport(batteryCapacity, electricityRate);
