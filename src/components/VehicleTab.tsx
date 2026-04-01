@@ -2,8 +2,14 @@ import { motion } from "framer-motion";
 import { Battery, Thermometer, Gauge, Zap, MapPin, Clock } from "lucide-react";
 import { useVehicleData } from "@/hooks/useVehicleData";
 import { Skeleton } from "@/components/ui/skeleton";
+import type { AppSettings } from "@/hooks/useSettings";
 
-const VehicleTab = () => {
+interface VehicleTabProps {
+  settings?: AppSettings;
+}
+
+const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
+  const vehicleModel = settings?.vehicleModel ?? "Model 3";
   const { data, isLoading, isError } = useVehicleData();
 
   if (isLoading) {
