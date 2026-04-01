@@ -8,7 +8,7 @@ interface SettingsTabProps {
   onUpdateSettings: (patch: Partial<AppSettings>) => void;
 }
 
-const SettingsTab = ({ settings, onUpdateSettings }: SettingsTabProps) => {
+const SettingsTab = ({ settings = { batteryCapacity: 63, electricityRate: 320 }, onUpdateSettings = () => {} }: Partial<SettingsTabProps> & {}) => {
   const menuSections = [
     {
       title: "계정",
