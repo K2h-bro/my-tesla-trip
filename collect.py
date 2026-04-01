@@ -10,7 +10,7 @@ SUPABASE_URL  = os.environ["SUPABASE_URL"]
 SUPABASE_KEY  = os.environ["SUPABASE_KEY"]
 
 TESLA_AUTH_URL = "https://auth.tesla.com/oauth2/v3/token"
-TESLA_API_BASE = "https://owner-api.teslamotors.com"
+TESLA_API_BASE = "https://fleet-api.prd.na.vn.cloud.tesla.com"
 
 def get_access_token():
     payload = {
