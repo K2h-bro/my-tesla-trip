@@ -179,9 +179,3 @@ if __name__ == "__main__":
 ```
 
 ---
-
-## GitHub Secrets 추가 목록
-```
-KAKAO_ACCESS_TOKEN   ← 카카오 개발자 콘솔 > 내 앱 > 보안 > 액세스 토큰
-SUPABASE_URL         ← 기존 유지
-SUPABASE_KEY         ← 기존 유지
