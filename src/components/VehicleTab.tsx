@@ -14,8 +14,7 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
 
   if (isLoading) {
     return (
-      <div className="space-y-5 pb-4">
-        <Skeleton className="h-6 w-32" />
+      <div className="space-y-6 pb-4">
         <Skeleton className="h-48 rounded-2xl" />
         <div className="grid grid-cols-2 gap-3">
           {[...Array(6)].map((_, i) => (
@@ -28,11 +27,8 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
 
   if (isError || !data) {
     return (
-      <div className="space-y-5 pb-4">
-        <h1 className="text-xl font-bold text-foreground">내 차량</h1>
-        <div className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground text-sm">차량 데이터를 불러올 수 없습니다.</p>
-        </div>
+      <div className="flex items-center justify-center h-64">
+        <p className="text-muted-foreground text-sm">차량 데이터를 불러올 수 없습니다.</p>
       </div>
     );
   }
@@ -49,46 +45,46 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
   const lastUpdate = data.recordedAt ? new Date(data.recordedAt).toLocaleString("ko-KR") : "";
 
   return (
-    <div className="space-y-5 pb-4">
-      <h1 className="text-xl font-bold text-foreground">내 차량</h1>
-
+    <div className="space-y-6 pb-4">
+      {/* Vehicle Hero */}
       <motion.div
-        className="card-premium rounded-2xl p-6 text-center card-glow"
+        className="bg-card rounded-2xl p-6 text-center"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div className="w-20 h-20 rounded-2xl bg-primary/10 mx-auto flex items-center justify-center text-3xl">
+        <div className="w-16 h-16 rounded-2xl bg-primary/10 mx-auto flex items-center justify-center text-2xl">
           🚗
         </div>
         <h2 className="text-lg font-extrabold text-foreground mt-3">Tesla {vehicleModel}</h2>
-        <div className="flex items-center justify-center gap-2 mt-2">
-          <div className={`w-2 h-2 rounded-full ${data.isCharging ? "bg-efficiency-good animate-pulse" : "bg-muted-foreground/30"}`} />
-          <span className="text-sm text-muted-foreground">{data.isCharging ? "충전 중" : "대기 중"}</span>
+        <div className="flex items-center justify-center gap-2 mt-1.5">
+          <div className={`w-2 h-2 rounded-full ${data.isCharging ? "bg-primary animate-pulse" : "bg-muted-foreground/30"}`} />
+          <span className="text-xs text-muted-foreground">{data.isCharging ? "충전 중" : "대기 중"}</span>
         </div>
         {lastUpdate && (
-          <div className="flex items-center justify-center gap-1 mt-2">
-            <Clock size={12} className="text-muted-foreground/50" />
+          <div className="flex items-center justify-center gap-1 mt-1.5">
+            <Clock size={10} className="text-muted-foreground/50" />
             <p className="text-[10px] text-muted-foreground/50">{lastUpdate} 기준</p>
           </div>
         )}
       </motion.div>
 
+      {/* Stats Grid */}
       <div className="grid grid-cols-2 gap-3">
         {vehicleInfo.map((info, i) => {
           const Icon = info.icon;
           return (
             <motion.div
               key={info.label}
-              className="card-premium rounded-2xl p-4 card-glow"
+              className="bg-card rounded-2xl p-4"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
             >
-              <Icon size={18} className="text-primary mb-2" />
-              <p className="text-xs text-muted-foreground">{info.label}</p>
-              <p className="text-xl font-extrabold text-foreground">{info.value}</p>
-              <p className="text-[10px] text-muted-foreground">{info.sub}</p>
+              <Icon size={16} className="text-primary mb-1.5" />
+              <p className="text-[10px] text-muted-foreground">{info.label}</p>
+              <p className="text-xl font-extrabold text-foreground mt-0.5">{info.value}</p>
+              <p className="text-[10px] text-muted-foreground mt-0.5">{info.sub}</p>
             </motion.div>
           );
         })}

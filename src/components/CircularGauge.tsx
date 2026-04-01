@@ -7,7 +7,7 @@ interface CircularGaugeProps {
   label?: string;
 }
 
-const CircularGauge = ({ score, size = 160, strokeWidth = 10, label = "전비 점수" }: CircularGaugeProps) => {
+const CircularGauge = ({ score, size = 150, strokeWidth = 12, label = "전비 점수" }: CircularGaugeProps) => {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = (score / 100) * circumference;
@@ -46,11 +46,11 @@ const CircularGauge = ({ score, size = 160, strokeWidth = 10, label = "전비 �
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-5xl font-extrabold text-foreground">{score}</span>
-          <span className="text-xs text-muted-foreground mt-0.5">/ 100</span>
+          <span className="text-4xl font-extrabold text-foreground">{score}</span>
+          <span className="text-[10px] text-muted-foreground mt-0.5">/ 100</span>
         </div>
       </div>
-      <span className="text-sm font-medium text-muted-foreground mt-2">{label}</span>
+      <span className="text-xs font-medium text-muted-foreground mt-2">{label}</span>
     </div>
   );
 };
