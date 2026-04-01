@@ -16,7 +16,7 @@ const Index = () => {
     switch (activeTab) {
       case "report": return <ReportTab settings={settings} />;
       case "diary": return <DiaryTab settings={settings} />;
-      case "vehicle": return <VehicleTab />;
+      case "vehicle": return <VehicleTab settings={settings} />;
       case "settings": return <SettingsTab settings={settings} onUpdateSettings={updateSettings} />;
     }
   };
