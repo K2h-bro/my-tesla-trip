@@ -1,8 +1,14 @@
 import { useState, useCallback } from "react";
 
+export type VehicleModel = "Model 3" | "Model Y" | "Model S" | "Model X";
+
 export interface AppSettings {
-  batteryCapacity: number; // kWh
-  electricityRate: number; // ₩/kWh
+  batteryCapacity: number;
+  electricityRate: number;
+  userName: string;
+  vehicleModel: VehicleModel;
+  weeklyReportNotification: boolean;
+  batteryLowThreshold: number;
 }
 
 const STORAGE_KEY = "drivelog-settings";
@@ -10,6 +16,10 @@ const STORAGE_KEY = "drivelog-settings";
 const DEFAULTS: AppSettings = {
   batteryCapacity: 63,
   electricityRate: 320,
+  userName: "",
+  vehicleModel: "Model 3",
+  weeklyReportNotification: true,
+  batteryLowThreshold: 20,
 };
 
 function loadSettings(): AppSettings {
