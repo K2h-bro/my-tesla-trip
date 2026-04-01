@@ -155,7 +155,7 @@ if __name__ == "__main__":
 ## GitHub Secrets 정리
 ```
 # 제거해도 됨 (더 이상 사용 안 함)
-TESLA_CLIENT_SECRET  ← 삭제 가능
+TESLA_CLIENT_SECRET  - 삭제 가능
 
 # 유지 필수
 TESLA_CLIENT_ID
