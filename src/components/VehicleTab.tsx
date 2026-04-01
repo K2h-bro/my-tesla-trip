@@ -62,7 +62,7 @@ const VehicleTab = ({ settings }: VehicleTabProps = {}) => {
         <div className="w-20 h-20 rounded-2xl bg-primary/10 mx-auto flex items-center justify-center text-3xl">
           🚗
         </div>
-        <h2 className="text-lg font-bold text-foreground mt-3">Tesla Model 3</h2>
+        <h2 className="text-lg font-bold text-foreground mt-3">Tesla {vehicleModel}</h2>
         <div className="flex items-center justify-center gap-2 mt-2">
           <div className={`w-2 h-2 rounded-full ${data.isCharging ? "bg-efficiency-good animate-pulse" : "bg-muted-foreground/30"}`} />
           <span className="text-sm text-muted-foreground">{data.isCharging ? "충전 중" : "대기 중"}</span>
