@@ -10,8 +10,8 @@ interface DiaryTabProps {
   settings: AppSettings;
 }
 
-const DiaryTab = ({ settings }: DiaryTabProps) => {
-  const { data, isLoading, isError } = useDiaryData(settings.batteryCapacity);
+const DiaryTab = ({ settings = { batteryCapacity: 63, electricityRate: 320 } }: Partial<DiaryTabProps> & {}) => {
+  const { data, isLoading, isError } = useDiaryData(settings?.batteryCapacity ?? 63);
 
   if (isLoading) {
     return (
