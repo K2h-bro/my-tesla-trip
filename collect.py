@@ -1,12 +1,13 @@
 """
-Tesla Owner API → Supabase collector
+Tesla Fleet API → Supabase collector
   - Refresh access token using refresh token
-  - Fetch vehicle_data and INSERT into drives table
-  - On 408 (vehicle sleeping): clone latest row with current timestamp
+  - On 408 (vehicle sleeping): wake_up → poll 30s → fetch → INSERT
+  - On wake timeout: skip gracefully
 """
 
 import os
 import sys
+import time
 import requests
 from datetime import datetime, timezone
 from supabase import create_client, Client
@@ -20,6 +21,9 @@ SUPABASE_KEY  = os.environ["SUPABASE_KEY"]
 
 TESLA_AUTH_URL = "https://auth.tesla.com/oauth2/v3/token"
 TESLA_API_BASE = "https://fleet-api.prd.na.vn.cloud.tesla.com"
+
+WAKE_TIMEOUT_SEC  = 30   # max wait for vehicle to wake
+WAKE_POLL_SEC     =  3   # interval between state checks
 
 
 # -- 1. Get Access Token ------------------------------------------------------
@@ -54,7 +58,43 @@ def get_vehicle_id(headers: dict) -> str:
     return vehicle_id
 
 
-# -- 3. Get Vehicle Data ------------------------------------------------------
+# -- 3. Wake Up Vehicle -------------------------------------------------------
+def wake_up(headers: dict, vehicle_id: str) -> None:
+    url  = f"{TESLA_API_BASE}/api/1/vehicles/{vehicle_id}/wake_up"
+    resp = requests.post(url, headers=headers, timeout=30)
+    resp.raise_for_status()
+    print("🔔 wake_up command sent")
+
+
+# -- 4. Poll Until Online or Timeout ------------------------------------------
+def wait_until_online(headers: dict, vehicle_id: str) -> bool:
+    """
+    Poll vehicle state every WAKE_POLL_SEC seconds.
+    Return True if online within WAKE_TIMEOUT_SEC, False otherwise.
+    """
+    url     = f"{TESLA_API_BASE}/api/1/vehicles/{vehicle_id}"
+    elapsed = 0
+
+    while elapsed < WAKE_TIMEOUT_SEC:
+        time.sleep(WAKE_POLL_SEC)
+        elapsed += WAKE_POLL_SEC
+
+        try:
+            resp  = requests.get(url, headers=headers, timeout=15)
+            resp.raise_for_status()
+            state = resp.json().get("response", {}).get("state", "")
+            print(f"   [{elapsed:2d}s] vehicle state: {state}")
+            if state == "online":
+                print("✅ Vehicle is online")
+                return True
+        except Exception as poll_err:
+            print(f"   [{elapsed:2d}s] poll error: {poll_err}")
+
+    print(f"⚠️  Vehicle did not wake within {WAKE_TIMEOUT_SEC}s")
+    return False
+
+
+# -- 5. Get Vehicle Data ------------------------------------------------------
 def get_vehicle_data(headers: dict, vehicle_id: str) -> dict:
     url  = f"{TESLA_API_BASE}/api/1/vehicles/{vehicle_id}/vehicle_data"
     resp = requests.get(url, headers=headers, timeout=30)
@@ -64,7 +104,7 @@ def get_vehicle_data(headers: dict, vehicle_id: str) -> dict:
 
     if resp.status_code == 412:
         raise RuntimeError(
-            "412 Precondition Failed: check that TESLA_API_BASE is set to Owner API."
+            "412 Precondition Failed: domain registration required for Fleet API."
         )
 
     resp.raise_for_status()
@@ -73,7 +113,7 @@ def get_vehicle_data(headers: dict, vehicle_id: str) -> dict:
     return data
 
 
-# -- 4. Parse Fields ----------------------------------------------------------
+# -- 6. Parse Fields ----------------------------------------------------------
 def parse_row(data: dict) -> dict:
     charge  = data.get("charge_state",  {})
     climate = data.get("climate_state", {})
@@ -97,33 +137,7 @@ def parse_row(data: dict) -> dict:
     }
 
 
-# -- 5. Clone Latest Row (vehicle sleeping fallback) --------------------------
-def clone_latest_row(client: Client) -> dict:
-    result = (
-        client.table("drives")
-        .select("*")
-        .order("recorded_at", desc=True)
-        .limit(1)
-        .execute()
-    )
-    rows = result.data or []
-    if not rows:
-        raise RuntimeError("No existing rows to clone — cannot fallback.")
-
-    row = rows[0].copy()
-
-    # Strip DB-managed fields so INSERT gets a clean new row
-    row.pop("id",         None)
-    row.pop("created_at", None)
-
-    # Update timestamp to now
-    row["recorded_at"] = datetime.now(timezone.utc).isoformat()
-
-    print("✅ Latest row cloned (vehicle was sleeping)")
-    return row
-
-
-# -- 6. Supabase INSERT -------------------------------------------------------
+# -- 7. Supabase INSERT -------------------------------------------------------
 def insert_to_supabase(client: Client, row: dict) -> None:
     result = client.table("drives").insert(row).execute()
     if result.data:
@@ -147,34 +161,37 @@ def main():
             "Content-Type":  "application/json",
         }
 
-        vehicle_id   = get_vehicle_id(headers)
-        vehicle_data = get_vehicle_data(headers, vehicle_id)
-        row          = parse_row(vehicle_data)
+        vehicle_id = get_vehicle_id(headers)
 
-    except RuntimeError as e:
-        if str(e) == "VEHICLE_SLEEPING":
-            # 408 fallback: clone latest row with current timestamp
-            print("⚠️  Vehicle sleeping (408) — cloning latest row instead")
-            try:
-                row = clone_latest_row(supabase)
-            except RuntimeError as clone_err:
-                print(f"\n⚠️  Fallback failed: {clone_err}\n")
+        # -- First attempt ----------------------------------------------------
+        try:
+            vehicle_data = get_vehicle_data(headers, vehicle_id)
+
+        except RuntimeError as e:
+            if str(e) != "VEHICLE_SLEEPING":
+                raise
+
+            # -- 408: wake up and retry ---------------------------------------
+            print("⚠️  Vehicle sleeping (408) — sending wake_up")
+            wake_up(headers, vehicle_id)
+
+            online = wait_until_online(headers, vehicle_id)
+            if not online:
+                print("⏭️  Skipping this run — vehicle did not wake in time\n")
                 sys.exit(0)
-        else:
-            print(f"\n⚠️  Skipped: {e}\n")
-            sys.exit(0)
 
-    except Exception as e:
-        print(f"\n❌ Error: {e}\n")
-        sys.exit(1)
+            # -- Retry vehicle_data after wakeup ------------------------------
+            vehicle_data = get_vehicle_data(headers, vehicle_id)
 
-    print("\n📋 Row to insert:")
-    for k, v in row.items():
-        print(f"   {k}: {v}")
+        row = parse_row(vehicle_data)
 
-    try:
+        print("\n📋 Row to insert:")
+        for k, v in row.items():
+            print(f"   {k}: {v}")
+
         insert_to_supabase(supabase, row)
         print("\n🎉 Done!\n")
+
     except Exception as e:
         print(f"\n❌ Error: {e}\n")
         sys.exit(1)
